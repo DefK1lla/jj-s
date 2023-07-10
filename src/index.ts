@@ -1,8 +1,9 @@
 import express, { Request, Response, NextFunction } from "express";
 import cors from "cors";
 import MongoStore from "connect-mongo";
-const app = express();
+import mongoose from "mongoose";
 
+const app = express();
 require("dotenv").config();
 
 app.use(
@@ -34,3 +35,8 @@ app.set("trust proxy", 1);
 app.listen(process.env.PORT, () => {
   console.log(`Listening on port ${process.env.PORT}!`);
 });
+
+mongoose.set("strictQuery", false);
+mongoose.connect(`${process.env.MONGODB_URI}`, () =>
+  console.log("connected to mongodb")
+);
