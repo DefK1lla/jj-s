@@ -2,6 +2,13 @@ import express, { Request, Response, NextFunction } from "express";
 import cors from "cors";
 import MongoStore from "connect-mongo";
 import mongoose from "mongoose";
+import session from "express-session";
+
+import authRouter from './routes/auth';
+
+
+import bodyParser from 'body-parser';
+import passport from "passport";
 
 const app = express();
 require("dotenv").config();
@@ -13,6 +20,16 @@ app.use(
   })
 );
 app.use(express.json());
+app.use(session({
+  secret: "1",
+  resave: false,
+  saveUninitialized: false,
+  
+}));
+app.use(passport.authenticate('session'))
+app.use(bodyParser.urlencoded());
+app.use(bodyParser.json())
+app.use('/', authRouter);
 
 app.set("trust proxy", 1);
 // app.use(
@@ -39,4 +56,5 @@ app.listen(process.env.PORT, () => {
 mongoose.set("strictQuery", false);
 mongoose.connect(`${process.env.MONGODB_URI}`, () =>
   console.log("connected to mongodb")
-);
+  );
+  console.log(`${process.env.SIGNUP_URI}`)
