@@ -1,37 +1,44 @@
 import express, { Request, Response, NextFunction} from'express';
 import passport from 'passport';
 import {Strategy} from 'passport-local';
-import crypto from 'crypto';
+import bcrypt from 'bcryptjs';
 
-import { setLogin, getLogin } from '../db/login';
+import { setLogin, getLogin, getLoginById } from '../db/login';
+
+interface User {
+    id: any;
+    username: string;
+}
 
 const router = express.Router();
 
-passport.use(new Strategy(async function verify(username, password, cb) {
+passport.use(new Strategy({
+    usernameField: "username",
+    passwordField: "password"
+},async function verify(username, password, cb) {
     const userLogin = await getLogin(username);
     
-    if (userLogin === null ) { return cb(null, false, { message: 'Incorrect username or passsword.' }); }
+    console.log(userLogin)
+    if (userLogin === null ) { return cb(null, false, { message: 'Incorrect username' }); }
+   
+    const saltRounds = process.env.SALT!;
 
-    crypto.pbkdf2(password, userLogin.salt, 310000, 32, 'sha256', (err, hashedPassword) => {
-    if (err) { return cb(err); }
+    bcrypt.compare(password, userLogin.password, (err: Error, result: boolean) => {
+        if(!result) { 
+            return cb(null, false, { message: 'Incorrect password.' });
+         }
+    })
+    return cb(null, userLogin, {message: ""});
+ }))
 
-    if (!crypto.timingSafeEqual(userLogin.password, hashedPassword)) {
-        return cb(null, false, { message: 'Incorrect username or password.' });
-    }
-    return cb(null, userLogin);
- })
-}))
-
-passport.serializeUser((user, cb) => {
-    process.nextTick(() => 
-        cb(null, { id: user?.id, username: user?.username })
-    )
+passport.serializeUser((user: any, cb) => {
+        return cb(null, user.id)
 })
 
-passport.deserializeUser((user: any, cb) => {
-    process.nextTick(() => {
-        return cb(null, user)
-    })
+passport.deserializeUser( async (data: any, cb) => {
+    console.log(data)
+    const user = await getLoginById(data)
+    return cb(null, user)
 })
 
 router.post(`/login/password`, passport.authenticate('local', {
@@ -39,17 +46,21 @@ router.post(`/login/password`, passport.authenticate('local', {
     failureRedirect: `/login` 
 }));
 
-router.post('/signup', (req: Request, res: Response, next: NextFunction) => {
-    const salt = crypto.randomBytes(16);
-    crypto.pbkdf2(req.body.password, salt, 310000, 32, 'sha256', (err, hashedPassword) => {
+router.post('/logout', (req: Request, res: Response, next: NextFunction) => {
+    req.logout((err) => {
         if (err) { return next(err) }
 
-        setLogin(req.body.username, hashedPassword, salt)
-        .then(() => res.redirect(`/`))
-        .catch((e)=> {console.log(e)})
-        .finally(() => res.end('err')); //template
-        
+        res.redirect('/');
     })
+})
+
+router.post('/signup', (req: Request, res: Response, next: NextFunction) => {
+    const salt = +process.env.SALT!;
+    bcrypt.hash(req.body.password, salt, async (err: Error, hash: string) => {
+        const result = await setLogin(req.body.username, hash)
+        res.redirect(`/`)
+       
+    })      
 })
 
 export default router;
