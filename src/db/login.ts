@@ -15,7 +15,7 @@ const User = mongoose.model<IUser>('userAuthentication', userSchema);
 export async function setLogin(username: string, password: string) {
     try{
         const isUserExist = await User.findOne({ username: username });
-        console.log(isUserExist)
+        
         if (isUserExist) { return new Error("userExist") }
         const user = new User({
             username: username,
