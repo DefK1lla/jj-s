@@ -1,4 +1,3 @@
-//import { Schema, model } from "mongoose";
 import mongoose from "mongoose";
 interface IUser {
     username: string;
@@ -12,7 +11,7 @@ const userSchema = new mongoose.Schema<IUser>({
 
 const User = mongoose.model<IUser>('userAuthentication', userSchema);
 
-export async function setLogin(username: string, password: string) {
+export async function saveUser(username: string, password: string) {
     try{
         const isUserExist = await User.findOne({ username: username });
         
@@ -28,7 +27,7 @@ export async function setLogin(username: string, password: string) {
     }
 }
 
-export async function getLogin(username: string) {
+export async function authentication(username: string) {
     const user = await User.findOne({ username: username });
 
     if (user === null) { return null }
@@ -36,6 +35,6 @@ export async function getLogin(username: string) {
     return { id: user.id, username: user.username, password: user.password };
 }
 
-export async function getLoginById(id: string) {
+export async function authenticationById(id: string) {
     return await User.findById(id)
 }

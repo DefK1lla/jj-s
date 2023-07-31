@@ -2,13 +2,13 @@ import passport from 'passport';
 import { Strategy } from 'passport-local';
 import bcrypt from 'bcryptjs';
 
-import { getLogin, getLoginById } from 'src/db/login';
+import { authentication, authenticationById } from 'src/model/modelAuth';
 
 passport.use(new Strategy({
     usernameField: "username",
     passwordField: "password"
 },async function verify(username, password, cb) {
-    const userLogin = await getLogin(username);
+    const userLogin = await authentication(username);
     
     if (userLogin === null ) { return cb(null, false, { message: 'Incorrect username' }); }
    
@@ -27,7 +27,7 @@ passport.serializeUser((user: any, cb) => {
 })
 
 passport.deserializeUser( async (data: any, cb) => {
-    const user = await getLoginById(data)
+    const user = await authenticationById(data)
     return cb(null, user)
 })
 
