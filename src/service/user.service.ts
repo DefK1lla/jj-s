@@ -1,15 +1,4 @@
-import mongoose from "mongoose";
-interface IUser {
-    username: string;
-    password: string;
-}
-
-const userSchema = new mongoose.Schema<IUser>({
-    username: { type: String, required: true },
-    password: { type: String, required: true },
-});
-
-const User = mongoose.model<IUser>('userAuthentication', userSchema);
+import { User } from "src/model/user.model";
 
 export async function saveUser(username: string, password: string) {
     try{
