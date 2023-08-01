@@ -2,7 +2,7 @@ import passport from 'passport';
 import { Strategy } from 'passport-local';
 import bcrypt from 'bcryptjs';
 
-import { authentication, authenticationById } from 'src/service/user.service';
+import { authentication, authenticationById } from '../service/user.service';
 
 passport.use(new Strategy({
     usernameField: "username",

@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from "express";
 import bcrypt from 'bcryptjs';
 import passport from "passport";
 
-import { saveUser } from "src/service/user.service";
+import { saveUser } from "../service/user.service";
 
 export const registration = (req: Request, res: Response, next: NextFunction) => {
     const salt = +process.env.SALT!;
