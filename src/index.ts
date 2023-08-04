@@ -7,6 +7,7 @@ import bodyParser from 'body-parser';
 import passport from "passport";
 
 import authRouter from './routes/auth';
+import fileRouter from './routes/file';
 
 const app = express();
 require("dotenv").config();
@@ -31,7 +32,7 @@ app.use(bodyParser.json())
 app.use(passport.initialize());
 app.use(passport.session());
 app.use('/', authRouter);
-
+app.use('/', fileRouter);
 app.set("trust proxy", 1);
 // app.use(
 //   session({
