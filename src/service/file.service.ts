@@ -20,7 +20,7 @@ export async function createChildFile(parentFileId: string, name: string, local:
                 org_file_id: parentFileId,
                 name: name,
                 local: local,
-                data: JSON.stringify(data)
+                data: data
             });
 
             return await subFile.save();
@@ -52,7 +52,7 @@ export async function updateFile(id: string, name: string, local: string, data: 
             {
                 name: name,
                 local: local,
-                data: JSON.stringify(data)
+                data: data
             }
         );
     } catch (e) {
@@ -67,7 +67,7 @@ export async function updateChildFile(id: string, name: string, local: string, d
             {
                 name: name,
                 local: local,
-                data: JSON.stringify(data)
+                data: data
             }
         );
     } catch (e) {
