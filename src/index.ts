@@ -8,6 +8,7 @@ import passport from "passport";
 
 import authRouter from './routes/auth';
 import fileRouter from './routes/file';
+import interpretrRouter from './routes/interpreter';
 
 const app = express();
 require("dotenv").config();
@@ -33,6 +34,8 @@ app.use(passport.initialize());
 app.use(passport.session());
 app.use('/', authRouter);
 app.use('/', fileRouter);
+app.use('/', interpretrRouter);
+
 app.set("trust proxy", 1);
 // app.use(
 //   session({
@@ -56,6 +59,6 @@ app.listen(process.env.PORT, () => {
 });
 
 mongoose.set("strictQuery", false);
-mongoose.connect(`${process.env.MONGODB_URI}`, () =>
+mongoose.connect("mongodb://localhost:27017/test"/*`${process.env.MONGODB_URI}`*/, () =>
   console.log("connected to mongodb")
 );

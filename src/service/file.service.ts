@@ -62,7 +62,7 @@ export async function updateFile(id: string, name: string, local: string, data: 
 
 export async function updateChildFile(id: string, name: string, local: string, data: object | object[]) {
     try {
-        return await ChildFileJson.findById(
+        return await ChildFileJson.findByIdAndUpdate(
             {_id: id },
             {
                 name: name,
