@@ -3,13 +3,13 @@ import cors from "cors";
 import MongoStore from "connect-mongo";
 import mongoose from "mongoose";
 import session from "express-session";
-import bodyParser from 'body-parser';
+import bodyParser from "body-parser";
 import passport from "passport";
 import cookieParser from "cookie-parser";
 
-import authRouter from './routes/auth';
-import fileRouter from './routes/file';
-import interpretrRouter from './routes/interpreter';
+import authRouter from "./routes/auth";
+import fileRouter from "./routes/file";
+import interpretrRouter from "./routes/interpreter";
 
 const app = express();
 require("dotenv").config();
@@ -22,7 +22,7 @@ app.use(
 );
 app.use(express.json());
 app.use(bodyParser.urlencoded());
-app.use(bodyParser.json())
+app.use(bodyParser.json());
 app.use(
   session({
     secret: [`${process.env.SECRET_KEY}`],
@@ -30,7 +30,7 @@ app.use(
     saveUninitialized: true,
     store: MongoStore.create({ mongoUrl: `${process.env.MONGODB_URI}` }),
     cookie: {
-      sameSite: 'none',
+      sameSite: "none",
       secure: true,
       maxAge: 1000 * 60 * 60 * 24 * 7,
     },
@@ -39,15 +39,15 @@ app.use(
 app.use(cookieParser());
 app.use(passport.initialize());
 app.use(passport.session());
-app.use('/', authRouter);
-app.use('/', fileRouter);
-app.use('/', interpretrRouter);
+app.use("/", authRouter);
+app.use("/", fileRouter);
+app.use("/", interpretrRouter);
 
 app.set("trust proxy", 1);
 
-
 app.listen(process.env.PORT, () => {
   console.log(`Listening on port ${process.env.PORT}!`);
+  console.log("start");
 });
 
 mongoose.set("strictQuery", false);
