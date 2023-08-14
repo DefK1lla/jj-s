@@ -1,25 +1,26 @@
-import passport from 'passport';
+import passport, { session } from 'passport';
 import { Strategy } from 'passport-local';
 import bcrypt from 'bcryptjs';
 
 import { authentication, authenticationById } from '../service/user.service';
 
 passport.use(new Strategy({
-    usernameField: "username",
-    passwordField: "password"
-},async function verify(username, password, cb) {
-    const userLogin = await authentication(username);
-    
+    usernameField: "name",
+    passwordField: "password",
+    session: true
+},async function verify(name, password, cb) {
+    const userLogin = await authentication(name);
     if (userLogin === null ) { return cb(null, false, { message: 'Incorrect username' }); }
    
-    const saltRounds = process.env.SALT!;
 
     bcrypt.compare(password, userLogin.password, (err: Error, result: boolean) => {
+        
         if(!result) { 
             return cb(null, false, { message: 'Incorrect password.' });
          }
     })
-    return cb(null, userLogin, {message: ""});
+
+    return cb(null, userLogin, {message: "Correct username and password"});
  }))
 
 passport.serializeUser((user: any, cb) => {
@@ -28,6 +29,7 @@ passport.serializeUser((user: any, cb) => {
 
 passport.deserializeUser( async (data: any, cb) => {
     const user = await authenticationById(data)
+
     return cb(null, user)
 })
 

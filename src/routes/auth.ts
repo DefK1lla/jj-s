@@ -1,13 +1,15 @@
-import express, { Request, Response, NextFunction} from'express';
+import express from'express';
 
-import * as controller from '../controller/auth.controller'
+import * as authController from '../controller/auth.controller'
 
 const router = express.Router();
 
-router.post(`/login`, controller.passportAuthenticate);
+router.post(`/login`, authController.passportAuthenticate, authController.passportAuthenticateCallback);
 
-router.post('/logout', controller.logOut)
+router.get('/logout', authController.logOut)
 
-router.post('/signup', controller.registration)
+router.post('/signup', authController.registration)
+
+router.get('/user', authController.getUserData);
 
 export default router;
