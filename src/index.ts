@@ -10,6 +10,9 @@ import cookieParser from "cookie-parser";
 import authRouter from './routes/auth';
 import fileRouter from './routes/file';
 import interpretrRouter from './routes/interpreter';
+import folderRouter from "./routes/folder";
+import gameRouter from "./routes/game";
+
 
 const app = express();
 require("dotenv").config();
@@ -39,9 +42,12 @@ app.use(
 app.use(cookieParser());
 app.use(passport.initialize());
 app.use(passport.session());
+
 app.use('/', authRouter);
 app.use('/', fileRouter);
 app.use('/', interpretrRouter);
+app.use('/', folderRouter);
+app.use('/', gameRouter);
 
 app.set("trust proxy", 1);
 
