@@ -14,4 +14,4 @@ const folderJson = new mongoose.Schema<IFolder>({
 
 });
 
-export const FolderJson = mongoose.model("folder", folderJson);
+export const Folder = mongoose.model("folder", folderJson);

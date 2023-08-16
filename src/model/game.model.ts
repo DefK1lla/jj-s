@@ -6,8 +6,10 @@ interface IGames {
     img?: Buffer;
 }
 
-export const game = new mongoose.Schema<IGames>({
+const game = new mongoose.Schema<IGames>({
     author_id: { type: String, required: true },
     name: { type: String, required: true },
     img: { type: Buffer, required: false }
 });
+
+export const Game = mongoose.model("game", game);

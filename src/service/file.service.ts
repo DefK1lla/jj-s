@@ -11,7 +11,7 @@ export async function createFile(parentFolderId: string, name: string, local: st
 
             return await subFile.save();
         } catch (e) {
-            throw new Error('Can not create file');
+            throw new Error('Can not create the file');
         }
 }
 
@@ -34,7 +34,7 @@ export async function updateFile(id: string, name: string, local: string, data: 
             }
         );
     } catch (e) {
-        throw new Error('Can not update child file');
+        throw new Error('Can not update the file');
     }
 }
 
@@ -43,6 +43,6 @@ export async function deleteChildFileJsonById(id: string) {
     try {
         return await FileJson.findByIdAndRemove(id);
     } catch (e) {
-        throw new Error('Can not delete file by ID');
+        throw new Error('Can not delete the file by ID');
     }
 }

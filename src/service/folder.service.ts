@@ -1,4 +1,4 @@
-import { FolderJson } from "../model/folder.model";
+import { Folder } from "../model/folder.model";
 import { FileJson } from "../model/file.model";
 
 export async function createFolder(name: string, local: string, data: object | object[], img?: string) {
@@ -12,7 +12,7 @@ export async function createFolder(name: string, local: string, data: object | o
             buffer = undefined
         }
 
-        const file = new FolderJson({
+        const file = new Folder({
             name: name,
             local: local,
             data: data,
@@ -21,13 +21,13 @@ export async function createFolder(name: string, local: string, data: object | o
         
         return await file.save();
     } catch (e) {
-        throw new Error('Can not create folder');
+        throw new Error('Can not create the folder');
     }
 }
 
 export async function getFolders() {
     try {
-        return await FolderJson.find();
+        return await Folder.find();
     } catch (e) {
         throw new Error('Can not find any folders');
     }
@@ -43,7 +43,7 @@ export async function updateFolder(id: string, name: string, local: string, data
         } else {
             buffer = undefined
         }
-        return await FolderJson.findByIdAndUpdate(
+        return await Folder.findByIdAndUpdate(
             { _id: id },
             {
                 name: name,
@@ -53,15 +53,15 @@ export async function updateFolder(id: string, name: string, local: string, data
             }
         );
     } catch (e) {
-        throw new Error('Can not update file');
+        throw new Error('Can not update the folder');
     }
 }
 
 export async function deleteFileById(id: string) {
     try{
         await FileJson.deleteMany({ org_file_id: id});
-        return await FolderJson.findByIdAndRemove(id);
+        return await Folder.findByIdAndRemove(id);
     } catch (e) {
-        throw new Error('Can not delete file by ID');
+        throw new Error('Can not delete the folder by ID');
     }
 }
