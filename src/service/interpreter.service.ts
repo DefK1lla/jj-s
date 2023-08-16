@@ -1,45 +1,60 @@
-import { Translation } from "../model/interpreter.model";
+import { Interpreter } from "../model/interpreter.model";
 
-export async function createTranslation(data_id: string, interpreter: object[]) {
-    try {
-        const isDataExist = Translation.findOne({ data_id: data_id });
+export async function createInterpreter(
+    user_id: string, 
+    name: string, 
+    recent_translated: string[], 
+    scored_text: { text_id: number, is_score_positive: boolean | undefined }, 
+    ) {
+        try {
+            const isDataExist = Interpreter.findOne({ user_id: user_id });
 
-        if(isDataExist === null) {
-            return new Error('Trnslation exist and it have to be unique');
+            if(isDataExist === null) {
+                return new Error('Interpreter exist and it have to be unique');
+            }
+
+            const interpreter = new Interpreter({
+                user_id: user_id,
+                name: name,
+                recent_translated: recent_translated,
+                scored_text: scored_text,
+            });
+            
+            return await interpreter.save();
+        } catch (e) {
+            throw new Error('Can not save Interpreter');
         }
+}
 
-        const translation = new Translation({
-            data_id: data_id,
-            interpreter: interpreter,
-        });
-        
-        return await translation.save();
+export async function updateInterpreter(
+    user_id: string,
+    name: string, 
+    recent_translated: string[], 
+    scored_text: { text_id: number, is_score_positive: boolean | undefined }
+    ) {
+    try {
+        return await Interpreter.findOneAndUpdate({ user_id: user_id }, {
+            name: name,
+            recent_translated: recent_translated,
+            scored_text: scored_text
+         });
     } catch (e) {
-        console.log(interpreter);
-        throw new Error('Can not save translation');
+        throw new Error('Can not update Interpreter');
     }
 }
 
-export async function updateTranslation(data_id: string, interpreter: object[]) {
+export async function getInterpreter(user_id: string) {
     try {
-        return await Translation.findOneAndUpdate({ data_id: data_id }, { interpreter: interpreter });
+        return await Interpreter.findOne({user_id: user_id});
     } catch (e) {
-        throw new Error('Can not update translation');
+        throw new Error('Can not find Interpreter');
     }
 }
 
-export async function getTranslation(data_id: string) {
+export async function deleteInterpreter(id: string) {
     try {
-        return await Translation.findOne({data_id: data_id});
+        return await Interpreter.findByIdAndDelete(id);
     } catch (e) {
-        throw new Error('Can not find translation');
-    }
-}
-
-export async function deleteTranslation(id: string) {
-    try {
-        return await Translation.findByIdAndDelete(id);
-    } catch (e) {
-        throw new Error('Can not delete translation');
+        throw new Error('Can not delete Interpreter');
     }
 }

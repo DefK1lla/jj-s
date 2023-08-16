@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+
 interface IUser {
     name: string;
     password: string;

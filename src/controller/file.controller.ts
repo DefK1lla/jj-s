@@ -13,7 +13,12 @@ import {
 
 export const createFileData = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        await createFile(req.body.name, req.body.local, req.body.data);
+        await createFile(
+            req.body.name, 
+            req.body.local,
+            req.body.data, 
+            req.body.img
+            );
         
         res.status(200);
         res.end();
@@ -29,7 +34,8 @@ export const createChildFileData = async (req: Request, res: Response, next: Nex
             req.body.parentFileId, 
             req.body.name,
             req.body.local,
-            req.body.data
+            req.body.data,
+            req.body.img
         );
 
         res.status(200);
@@ -64,7 +70,8 @@ export const updateFileData = async (req: Request, res: Response, next: NextFunc
             req.body.id,
             req.body.name,
             req.body.local,
-            req.body.data
+            req.body.data,
+            req.body.img
             );
         res.status(200);
         res.end();
@@ -81,6 +88,7 @@ export const updateChildFileData = async (req: Request, res: Response, next: Nex
             req.body.name,
             req.body.local,
             req.body.data,
+            req.body.img
         );
         res.status(200);
         res.end();
