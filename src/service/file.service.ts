@@ -39,7 +39,7 @@ export async function updateFile(id: string, name: string, local: string, data: 
 }
 
 
-export async function deleteChildFileJsonById(id: string) {
+export async function deleteFileJsonById(id: string) {
     try {
         return await FileJson.findByIdAndRemove(id);
     } catch (e) {

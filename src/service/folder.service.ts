@@ -1,7 +1,7 @@
 import { Folder } from "../model/folder.model";
 import { FileJson } from "../model/file.model";
 
-export async function createFolder(name: string, local: string, data: object | object[], img?: string) {
+export async function createFolder(name: string, data: object | object[], img?: string) {
     try {
         let datas = "";
         let buffer;
@@ -14,7 +14,6 @@ export async function createFolder(name: string, local: string, data: object | o
 
         const file = new Folder({
             name: name,
-            local: local,
             data: data,
             img: buffer
         });
@@ -33,7 +32,7 @@ export async function getFolders() {
     }
 }
 
-export async function updateFolder(id: string, name: string, local: string, data: object | object[], img?: string) {
+export async function updateFolder(id: string, name: string, data: object | object[], img?: string) {
     try {
         let datas = "";
         let buffer;
@@ -47,7 +46,6 @@ export async function updateFolder(id: string, name: string, local: string, data
             { _id: id },
             {
                 name: name,
-                local: local,
                 data: data,
                 img: buffer
             }
@@ -57,7 +55,7 @@ export async function updateFolder(id: string, name: string, local: string, data
     }
 }
 
-export async function deleteFileById(id: string) {
+export async function deleteFolderById(id: string) {
     try{
         await FileJson.deleteMany({ org_file_id: id});
         return await Folder.findByIdAndRemove(id);

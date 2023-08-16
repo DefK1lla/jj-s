@@ -1,15 +1,20 @@
 import { Request, Response, NextFunction } from "express";
 
 import {
-    createTranslation,
-    getTranslation,
-    updateTranslation,
-    deleteTranslation
+    createInterpreter,
+    getInterpreter,
+    updateInterpreter,
+    deleteInterpreter
 } from '../service/interpreter.service';
 
-export const createTranslations = async (req: Request, res: Response, next: NextFunction) => {
+export const createInterpreters = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        await createTranslation(req.body.data_id, req.body.interpreter);
+        await createInterpreter(
+            req.body.user_id,
+            req.body.name,
+            req.body.recent_translated,
+            req.body.scored_text
+        );
         res.status(200);
         res.end();
     } catch (e: any) {
@@ -18,18 +23,23 @@ export const createTranslations = async (req: Request, res: Response, next: Next
     }
 }
 
-export const getTranslations = async (req: Request, res: Response, next: NextFunction) => {
+export const getInterpreters = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        res.send(await getTranslation(req.body.data_id));
+        res.send(await getInterpreter(req.body.user_id));
     } catch (e: any) {
         res.status(503);
         res.end(e.message);
     }
 }
 
-export const updateTranslations = async (req: Request, res: Response, next: NextFunction) => {
+export const updateInterpreters = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        await updateTranslation(req.body.data_id, req.body.interpreter);
+        await updateInterpreter(
+            req.body.user_id,
+            req.body.name,
+            req.body.recent_translated,
+            req.body.scored_text
+            );
         res.status(200);
         res.end();
     } catch (e: any) {
@@ -38,9 +48,9 @@ export const updateTranslations = async (req: Request, res: Response, next: Next
     }
 }
 
-export const deleteTranslations = async (req: Request, res: Response, next: NextFunction) => {
+export const deleteInterpreters = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        await deleteTranslation(req.body.id)
+        await deleteInterpreter(req.body.id)
         res.status(200);
         res.end();
     } catch (e: any) {
