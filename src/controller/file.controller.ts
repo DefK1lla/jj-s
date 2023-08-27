@@ -2,7 +2,9 @@ import { Request, Response, NextFunction } from "express";
 
 import { 
     createFile, 
+    setTranslate,
     getFiles,
+    getFile,
     updateFile,
     deleteFileJsonById,
 } from "../service/file.service";
@@ -12,7 +14,7 @@ import {
 export const createFileData = async (req: Request, res: Response, next: NextFunction) => {
     try {
         await createFile(
-            req.body.parentFileId, 
+            req.body.folder_id, 
             req.body.name,
             req.body.local,
             req.body.data,
@@ -27,6 +29,22 @@ export const createFileData = async (req: Request, res: Response, next: NextFunc
 }
 
 
+export const setTranslateData = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        await setTranslate(
+            req.body.id, 
+            req.body.translate,
+            );
+
+        res.status(200);
+        res.end();
+    } catch (e: any) {
+        console.log(e)
+        res.status(503);
+        res.end(e.message);
+    }
+}
+
 
 export const findFileData = async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -37,6 +55,15 @@ export const findFileData = async (req: Request, res: Response, next: NextFuncti
     }
 }
 
+
+export const findFileDataById = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        res.send(await getFile(req.body.id))
+    } catch (e: any) {
+        res.status(503);
+        res.end(e.message);
+    }
+}
 
 
 export const updateFileData = async (req: Request, res: Response, next: NextFunction) => {

@@ -12,4 +12,4 @@ const game = new mongoose.Schema<IGames>({
     img: { type: Buffer, required: false }
 });
 
-export const Game = mongoose.model("game", game);
+export const Game = mongoose.model<IGames>("game", game);

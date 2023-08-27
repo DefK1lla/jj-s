@@ -4,10 +4,12 @@ import * as fileController from '../controller/file.controller';
 
 const router = express.Router();
 
-router.post('/file', fileController.createFileData);
-router.get('/file', fileController.findFileData);
-router.put('/file', fileController.updateFileData);
-router.delete('/file', fileController.deleteFileDataById);
+router.post('/file/set', fileController.createFileData);
+router.post('/file/all', fileController.findFileData);
+router.post('/file/id', fileController.findFileDataById)
+router.post('/file', fileController.updateFileData);
+router.post('/file/translate', fileController.setTranslateData)
+router.post('/file', fileController.deleteFileDataById);
 
 
 

@@ -4,14 +4,15 @@ import {
     createFolder,
     getFolders,
     updateFolder,
-    deleteFolderById
+    deleteFolderById,
+    getFolderById
 } from "../service/folder.service";
 
 export const createFolderData = async (req: Request, res: Response, next: NextFunction) => {
     try {
         await createFolder(
             req.body.name, 
-            req.body.data, 
+            req.body.game_id, 
             req.body.img
             );
         
@@ -25,7 +26,16 @@ export const createFolderData = async (req: Request, res: Response, next: NextFu
 
 export const findFolderData = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        res.send(await getFolders());
+        res.send(await getFolders(req.body.id));
+    } catch (e: any) {
+        res.status(503);
+        res.end(e.message);
+    }
+}
+
+export const findFolderDataById = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        res.send(await getFolderById(req.body.id));
     } catch (e: any) {
         res.status(503);
         res.end(e.message);

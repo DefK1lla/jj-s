@@ -23,9 +23,35 @@ export async function createGame(author_id: string, name: string, img: string) {
     }
 }
 
+export async function getGameById(id: string) {
+    try {
+        
+        const game = await Game.findById(id);
+        
+        if(game !== null){
+            return {
+                name: game.name,
+                img: game.img?.toString("base64"),
+                id: game._id,
+                author_id: game?.author_id
+            }
+        } else {
+            return {};
+        }
+    } catch (e) {
+        throw new Error("Can not get any game")
+    }
+}
+
 export async function getGames() {
     try {
-        return await Game.find();
+        const game = await Game.find();
+        return game.map((item) => ({
+            name: item.name,
+            img: item.img?.toString("base64"),
+            id: item._id,
+            author_id: item.author_id
+        }))
     } catch (e) {
         throw new Error("Can not get any game")
     }

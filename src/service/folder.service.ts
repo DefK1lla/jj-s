@@ -1,7 +1,7 @@
 import { Folder } from "../model/folder.model";
 import { FileJson } from "../model/file.model";
 
-export async function createFolder(name: string, data: object | object[], img?: string) {
+export async function createFolder(name: string, game_id: string, img?: string) {
     try {
         let datas = "";
         let buffer;
@@ -11,10 +11,9 @@ export async function createFolder(name: string, data: object | object[], img?: 
         } else {
             buffer = undefined
         }
-
         const file = new Folder({
             name: name,
-            data: data,
+            game_id: game_id,
             img: buffer
         });
         
@@ -24,11 +23,31 @@ export async function createFolder(name: string, data: object | object[], img?: 
     }
 }
 
-export async function getFolders() {
+export async function getFolders(id: string) {
     try {
-        return await Folder.find();
+        const folders = await Folder.find({game_id: id});
+        return folders.map((item) => ({
+            name: item.name,
+            img: item.img?.toString("base64"),
+            id: item._id,
+            game_id: item.game_id
+        }))
     } catch (e) {
         throw new Error('Can not find any folders');
+    }
+}
+
+export async function getFolderById(id: string) {
+    try {
+        const folder = await Folder.findById(id);
+        return {
+            id: folder?.id,
+            img: folder!.img!.toString("base64"),
+            name: folder?.name,
+            game_id: folder?.game_id
+        }
+    } catch (e) {
+        throw new Error('Can not find the folder by id');
     }
 }
 

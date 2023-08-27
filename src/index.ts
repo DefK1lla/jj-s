@@ -23,18 +23,18 @@ app.use(
     credentials: true,
   })
 );
+app.use(bodyParser.json({ limit: "10mb" }))
+app.use(bodyParser.urlencoded({ limit: "10mb", extended: true, parameterLimit: 50000 }));
 app.use(express.json());
-app.use(bodyParser.urlencoded());
-app.use(bodyParser.json())
 app.use(
   session({
     secret: [`${process.env.SECRET_KEY}`],
     resave: true,
     saveUninitialized: true,
-    store: MongoStore.create({ mongoUrl: `${process.env.MONGODB_URI}` }),
+    store: MongoStore.create({ mongoUrl: `${"mongodb://localhost:27017/test"/*process.env.MONGODB_URI*/}` }),
     cookie: {
       sameSite: 'none',
-      secure: true,
+      secure: false, // change
       maxAge: 1000 * 60 * 60 * 24 * 7,
     },
   })
@@ -57,6 +57,6 @@ app.listen(process.env.PORT, () => {
 });
 
 mongoose.set("strictQuery", false);
-mongoose.connect(`${process.env.MONGODB_URI}`, () =>
+mongoose.connect(`${"mongodb://localhost:27017/test"/*process.env.MONGODB_URI*/}`, () =>
   console.log("connected to mongodb")
 );

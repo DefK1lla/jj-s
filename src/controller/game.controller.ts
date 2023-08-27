@@ -4,7 +4,8 @@ import {
     createGame,
     getGames,
     updateGame,
-    deleteGame
+    deleteGame,
+    getGameById
 } from "../service/game.service";
 
 export async function createGameData(req: Request, res: Response, next: NextFunction) {
@@ -21,6 +22,16 @@ export async function createGameData(req: Request, res: Response, next: NextFunc
         res.status(503);
         res.end(e.message);
     }
+}
+
+export async function getGameDataById(req: Request, res: Response, next: NextFunction) {
+    try {
+        
+        res.send(await getGameById(req.body.id));
+    } catch (e: any) {
+        res.status(503);
+        res.end(e.message);
+    }    
 }
 
 export async function getGameData(req: Request, res: Response, next: NextFunction) {
