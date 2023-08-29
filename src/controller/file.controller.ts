@@ -7,6 +7,8 @@ import {
     getFile,
     updateFile,
     deleteFileJsonById,
+    getNewFiles,
+    getFilesByAuhtorId,
 } from "../service/file.service";
 
 
@@ -14,6 +16,7 @@ import {
 export const createFileData = async (req: Request, res: Response, next: NextFunction) => {
     try {
         await createFile(
+            req.body.author_id,
             req.body.folder_id, 
             req.body.name,
             req.body.local,
@@ -91,6 +94,24 @@ export const deleteFileDataById = async (req: Request, res: Response, next: Next
 
         res.status(200);
         res.end();
+    } catch (e: any) {
+        res.status(503);
+        res.end(e.message);
+    }
+}
+
+export const getNewFilesData = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        res.send(await getNewFiles(req.body.id));
+    } catch (e: any) {
+        res.status(503);
+        res.end(e.message);
+    }
+}
+
+export const getFilesByAuhtorIdData = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        res.send(await getFilesByAuhtorId(req.body.id));
     } catch (e: any) {
         res.status(503);
         res.end(e.message);

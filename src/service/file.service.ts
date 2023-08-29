@@ -1,28 +1,39 @@
+import fs from "fs";
+
 import { FileJson } from "../model/file.model";
 
-export async function createFile(parentFolderId: string, name: string, local: string, data: string) {
+export async function createFile(author_id: string, parentFolderId: string, name: string, local: string, data: string) {
         try {
             const subFile = new FileJson({
                 folder_id: parentFolderId,
                 name: name,
                 local: local,
-                data: data,
-                translate: data
+                author_id: author_id
             });
+            if (data) {
+                let result = await subFile.save();
+                console.log(result)
+                fs.writeFileSync(`./src/files/${result.id}_${result.name}_original.json`, data);
+                fs.writeFileSync(`./src/files/${result.id}_${result.name}_translate.json`, data);
+            } else {
+                throw "file validation failed: data: Path `data` is required."
+            }
 
-            return await subFile.save();
-        } catch (e) {
-            throw new Error('Can not create the file');
+
+        } catch (e: any) {
+            console.log(e)
+            throw e
         }
 }
 export async function setTranslate(id: string, translate: string) {
     try {
-        return await FileJson.findByIdAndUpdate(id, {
-            translate: translate
-        });
+        const result = await FileJson.findById(id);
+        const translateFile = fs.writeFileSync(`./src/files/${id}_${result?.name}_translate.json`, translate);
+
+        return translateFile;
     } catch (e) {
-        console.log(e);
-        throw new Error('Can not create the translation file');
+        console.log(e)
+        throw e
     }
 }
 
@@ -34,44 +45,114 @@ export async function getFiles(folderId: string) {
                 id: item.id,
                 name: item.name,
                 local: item.local,
-                data: item.data,
-                translate: item.translate,
                 folder_id: item.folder_id
             }
         })
     } catch(e) {
-        throw new Error('Can not find any files by parent\'s ID');
+        console.log(e)
+        throw e
     }
 }
 
 export async function getFile(id: string) {
     try {
-        return await FileJson.findById(id);
+        const file = await FileJson.findById(id);
+
+        const original = fs.readFileSync(`./src/files/${id}_${file!.name}_original.json`, "utf-8").toString();
+        const translate = fs.readFileSync(`./src/files/${id}_${file!.name}_translate.json`, "utf-8").toString();
+
+        return {
+            id: id,
+            name: file?.name,
+            local: file?.local,
+            data: original,
+            translate: translate,
+            folder_id: file?.folder_id
+        }
+
     } catch(e) {
-        throw new Error('Can not find any files by ID');
+        console.log(e)
+        throw e
     }
 }
 
 export async function updateFile(id: string, name: string, local: string, data: object | object[]) {
     try {
-        return await FileJson.findByIdAndUpdate(
+        const file = await FileJson.findById(id);
+        const result = await FileJson.findByIdAndUpdate(
             {_id: id },
             {
                 name: name,
                 local: local,
-                data: data,
             }
         );
+        const original = fs.readFileSync(`./src/files/${id}_${file!.name}_original.json`, "utf-8").toString();
+        const translate = fs.readFileSync(`./src/files/${id}_${file!.name}_translate.json`, "utf-8").toString();
+
+        fs.unlinkSync(`./src/files/${id}_${file!.name}_original.json`);
+        fs.unlinkSync(`./src/files/${id}_${file!.name}_translate.json`);
+
+        fs.writeFileSync(`./src/files/${id}_${name}_original.json`, original);
+        fs.writeFileSync(`./src/files/${id}_${name}_translate.json`, translate);
+        return {
+            id: result?.id,
+            name: result?.name,
+            local: result?.local,
+            folder_id: result?.folder_id,
+            data: original,
+            translate: translate
+        };
+
     } catch (e) {
-        throw new Error('Can not update the file');
+        console.log(e)
+        throw e
     }
 }
 
 
 export async function deleteFileJsonById(id: string) {
     try {
+        const file = await FileJson.findById(id);
+
+        fs.unlinkSync(`./src/files/${id}_${file!.name}_original.json`);
+        fs.unlinkSync(`./src/files/${id}_${file!.name}_translate.json`);
         return await FileJson.findByIdAndRemove(id);
     } catch (e) {
-        throw new Error('Can not delete the file by ID');
+        console.log(e)
+        throw e
+    }
+}
+
+export async function getNewFiles(authorId: string) {
+    try {
+        const result = await FileJson.find({ author_id: authorId }).sort({ createdAt: -1}).limit(4);
+        return result.map((item) => {
+            return {
+                id: item.id,
+                name: item.name,
+                local: item.local
+            }
+        })
+    } catch (e) {
+        console.log(e)
+        throw e
+    }
+}
+
+export async function getFilesByAuhtorId(authorId: string) {
+    try {  
+        console.log(authorId)
+        const result = await FileJson.find({ author_id: authorId});
+        return result.map((file) => {   
+            const translate = fs.readFileSync(`./src/files/${file.id}_${file!.name}_translate.json`, "utf-8").toString();
+            return {
+                name: file.name,
+                local: file.local,
+                translate: translate,
+            }
+        })
+    } catch (e) {
+        console.log(e)
+        throw e
     }
 }

@@ -6,7 +6,7 @@ import { authentication, authenticationById } from '../service/user.service';
 import { saveUser } from '../service/user.service';
 import { User } from '../../src/model/user.model';
 
-passport.use(new Strategy({
+passport.use("local-signin", new Strategy({
     usernameField: "username",
     passwordField: "password",
     session: true
@@ -33,10 +33,11 @@ passport.use('local-signup', new Strategy({
     const user = await User.findOne({ name: username });
     if (user) {
         
-        return done(null, false, { message: 'That email is already taken.' })
+        return done("That login is already taken.", false, { message: 'That login is already taken.' })
     } else {
         bcrypt.hash(password, salt, async (err: Error, hash: string) => {
             try {   
+                
                 const result = await saveUser(req.body.username, hash)
                 
                 done(null, result, {message: "Correct username and password"})
@@ -46,6 +47,7 @@ passport.use('local-signup', new Strategy({
         
         })
     } 
+
 }))
 
 passport.serializeUser((user: any, cb) => {

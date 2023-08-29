@@ -25,12 +25,13 @@ export const logOut = (req: Request, res: Response, next: NextFunction) => {
         if (err) { 
             return next(err) 
         }
+        console.log("logout")
         res.status(200);
         res.end();
     })
 }
 
-export const passportAuthenticate = passport.authenticate( 'local', {
+export const passportAuthenticate = passport.authenticate( 'local-signin', {
     successMessage: true,
     failureMessage: true
 });

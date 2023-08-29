@@ -11,7 +11,8 @@ export async function saveUser(name: string, password: string) {
         return await user.save();
         
     } catch (e: any) {
-        throw e.message;
+        console.log(e)
+        throw e
     }
 }
 
