@@ -12,9 +12,14 @@ export async function createFile(author_id: string, parentFolderId: string, name
             });
             if (data) {
                 let result = await subFile.save();
-                console.log(result)
-                fs.writeFileSync(`./src/files/${result.id}_${result.name}_original.json`, data);
-                fs.writeFileSync(`./src/files/${result.id}_${result.name}_translate.json`, data);
+                fs.access('./src/files', (err) => {
+                    if (err) {
+                        fs.mkdirSync('./src/files');
+                    } else {
+                        fs.writeFileSync(`./src/files/${result.id}_${result.name}_original.json`, data);
+                        fs.writeFileSync(`./src/files/${result.id}_${result.name}_translate.json`, data);
+                    }
+                })
             } else {
                 throw "file validation failed: data: Path `data` is required."
             }
@@ -140,8 +145,7 @@ export async function getNewFiles(authorId: string) {
 }
 
 export async function getFilesByAuhtorId(authorId: string) {
-    try {  
-        console.log(authorId)
+    try { 
         const result = await FileJson.find({ author_id: authorId});
         return result.map((file) => {   
             const translate = fs.readFileSync(`./src/files/${file.id}_${file!.name}_translate.json`, "utf-8").toString();

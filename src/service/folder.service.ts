@@ -11,7 +11,13 @@ export async function createFolder(name: string, game_id: string, img: string) {
         });
         
         const data = await file.save();
-        fs.writeFileSync(`./src/imgs/${data.id}`, img);
+        fs.access('./src/imgs', (err) => {
+            if (err) {
+                fs.mkdirSync('./src/imgs');
+            } else {
+                fs.writeFileSync(`./src/imgs/${data.id}`, img);
+            }
+        })
         return 'success'
     } catch (e: any) {
         console.log(e)

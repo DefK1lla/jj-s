@@ -12,7 +12,13 @@ export async function createGame(author_id: string, name: string, img: string) {
         });
 
         const data = await game.save();
-        fs.writeFileSync(`./src/imgs/${data.id}`, img);
+        fs.access("./src/img", (err) => {
+            if (err) {
+                fs.mkdirSync('./src/imgs');
+            } else {
+                fs.writeFileSync(`./src/imgs/${data.id}`, img);
+            }
+        })
     } catch (e: any) {
         console.log(e)
         throw e

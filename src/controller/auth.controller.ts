@@ -1,8 +1,9 @@
 import { Request, Response, NextFunction } from "express";
 import bcrypt from 'bcryptjs';
 
-import { saveUser, authentication } from "../service/user.service";
+import { saveUser, ResetPassword } from "../service/user.service";
 import passport from '../passport/index';
+import { User } from "../../src/model/user.model";
 
 export const registration = (req: Request, res: Response, next: NextFunction) => {
     const salt = +process.env.SALT!;
@@ -25,7 +26,6 @@ export const logOut = (req: Request, res: Response, next: NextFunction) => {
         if (err) { 
             return next(err) 
         }
-        console.log("logout")
         res.status(200);
         res.end();
     })
@@ -48,10 +48,36 @@ export const passportAuthenticateCallback = (req: Request, res: Response, next: 
 }
 
 export const getUserData = async (req: Request, res: Response) => {
-    if (!req.user) {
-        res.send("Unauthorized");
-    } else {
-        
-    res.send(req.user)
+    try {
+        if (!req.user) {
+            res.send("Unauthorized");
+        } else { 
+            res.send(req.user);
+        }
+    } catch (e) {
+        res.status(503);
+        res.end(e);
+    }
 }
+
+export const setNewPassword = async (req: Request, res: Response) => {
+    try {
+        if (req.user) {
+            const user = await User.findById(req.body.id);
+            bcrypt.compare(req.body.old_password, user?.password!, (err: Error, result: boolean) => {
+                if (result) {
+                    const salt = +process.env.SALT!;
+                    bcrypt.hash(req.body.new_password, salt, async (err: Error, hash: string) => {
+                        res.send(await ResetPassword(req.body.id, hash));
+                    })
+                }
+            })
+
+        } else {
+            throw Error("Unauthorized")
+        }
+    } catch (e: any) {
+        res.status(503);
+        res.end(e.message)
+    }
 }

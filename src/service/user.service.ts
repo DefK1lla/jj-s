@@ -32,3 +32,15 @@ export async function authenticationById(id: string) {
         username: user?.name
     }
 }
+
+export async function ResetPassword(id: string, password: string) {
+    try {
+        return await User.findByIdAndUpdate(id , {
+            password: password
+        })
+
+    } catch (e: any) {
+        console.log(e);
+        throw e
+    }
+}
