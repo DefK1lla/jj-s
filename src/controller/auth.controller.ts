@@ -10,7 +10,6 @@ export const registration = (req: Request, res: Response, next: NextFunction) =>
     bcrypt.hash(req.body.password, salt, async (err: Error, hash: string) => {
         try {   
             const result = await saveUser(req.body.username, hash)
-            
             res.send(result)
         } catch(e) {
             res.status(503);
@@ -22,16 +21,18 @@ export const registration = (req: Request, res: Response, next: NextFunction) =>
 
 
 export const logOut = (req: Request, res: Response, next: NextFunction) => {
-    req.logout((err) => {
+    req.logout( { keepSessionInfo: false },(err) => {
+        console.log(err)
         if (err) { 
             return next(err) 
         }
         res.status(200);
         res.end();
     })
+    
 }
 
-export const passportAuthenticate = passport.authenticate( 'local-signin', {
+export const passportAuthenticate = passport.authenticate( 'local', {
     successMessage: true,
     failureMessage: true
 });
@@ -64,10 +65,12 @@ export const setNewPassword = async (req: Request, res: Response) => {
     try {
         if (req.user) {
             const user = await User.findById(req.body.id);
+            console.log(req.body.old_password, user?.password!)
             bcrypt.compare(req.body.old_password, user?.password!, (err: Error, result: boolean) => {
                 if (result) {
                     const salt = +process.env.SALT!;
                     bcrypt.hash(req.body.new_password, salt, async (err: Error, hash: string) => {
+                        console.log(hash)
                         res.send(await ResetPassword(req.body.id, hash));
                     })
                 }

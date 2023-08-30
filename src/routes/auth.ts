@@ -12,4 +12,6 @@ router.post('/signup',authController.passportRegistration, authController.getUse
 
 router.get('/user', authController.getUserData);
 
+router.post('/password', authController.setNewPassword)
+
 export default router;

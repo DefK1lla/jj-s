@@ -6,22 +6,26 @@ import { authentication, authenticationById } from '../service/user.service';
 import { saveUser } from '../service/user.service';
 import { User } from '../../src/model/user.model';
 
-passport.use("local-signin", new Strategy({
+passport.use("local", new Strategy({
     usernameField: "username",
     passwordField: "password",
     session: true
 },async function verify(name, password, cb) {
     const userLogin = await authentication(name);
     if (userLogin === null ) { return cb(null, false, { message: 'Incorrect username' }); }
-    console.log(name)
+    console.log(password, userLogin.password)
 
     bcrypt.compare(password, userLogin.password, (err: Error, result: boolean) => {
-        
+        if (err) {
+            return cb(err);
+        }
+        console.log(result)
         if(!result) { 
             return cb(null, false, { message: 'Incorrect password.' });
-         }
+        } else {
+            return cb(null, userLogin, {message: "Correct username and password"});
+        }
     })
-    return cb(null, userLogin, {message: "Correct username and password"});
  }))
 
 passport.use('local-signup', new Strategy({
