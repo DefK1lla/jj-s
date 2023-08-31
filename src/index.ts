@@ -7,9 +7,11 @@ import bodyParser from "body-parser";
 import passport from "passport";
 import cookieParser from "cookie-parser";
 
-import authRouter from "./routes/auth";
-import fileRouter from "./routes/file";
-import interpretrRouter from "./routes/interpreter";
+import authRouter from './routes/auth';
+import fileRouter from './routes/file';
+import interpretrRouter from './routes/interpreter';
+import folderRouter from "./routes/folder";
+import gameRouter from "./routes/game";
 
 const app = express();
 require("dotenv").config();
@@ -20,15 +22,16 @@ app.use(
     credentials: true,
   })
 );
+app.use(bodyParser.json({ limit: "10mb" }))
+app.use(bodyParser.urlencoded({ limit: "10mb", extended: true, parameterLimit: 50000 }));
 app.use(express.json());
-app.use(bodyParser.urlencoded());
-app.use(bodyParser.json());
+
 app.use(
   session({
     secret: [`${process.env.SECRET_KEY}`],
     resave: true,
     saveUninitialized: true,
-    store: MongoStore.create({ mongoUrl: `${process.env.MONGODB_URI}` }),
+    store: MongoStore.create({ mongoUrl: process.env.MONGODB_URI }),
     cookie: {
       sameSite: "none",
       secure: true,
@@ -39,9 +42,12 @@ app.use(
 app.use(cookieParser());
 app.use(passport.initialize());
 app.use(passport.session());
-app.use("/", authRouter);
-app.use("/", fileRouter);
-app.use("/", interpretrRouter);
+
+app.use('/', authRouter);
+app.use('/', fileRouter);
+app.use('/', interpretrRouter);
+app.use('/', folderRouter);
+app.use('/', gameRouter);
 
 app.set("trust proxy", 1);
 
