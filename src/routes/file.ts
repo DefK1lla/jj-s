@@ -1,6 +1,6 @@
-import express from 'express';
+import express from "express";
 
-import * as fileController from '../controller/file.controller';
+import * as fileController from "../controller/file.controller";
 
 const router = express.Router();
 
@@ -12,6 +12,5 @@ router.post('/file/translate', fileController.setTranslateData);
 router.post('/file', fileController.deleteFileDataById);
 router.post('/file/news', fileController.getNewFilesData);
 router.post('/file/author-id', fileController.getFilesByAuhtorIdData);
-
 
 export default router;

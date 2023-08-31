@@ -72,7 +72,6 @@ passport.use("local-admin", new Strategy({
         }
     })
  }))
-
 passport.use('local-signup-admin', new Strategy({
     usernameField: "username",
     passwordField: "password",
@@ -112,5 +111,4 @@ passport.deserializeUser( async (data: any, cb) => {
     user.admin = data.admin
     return cb(null, user)
 })
-
 export default passport;

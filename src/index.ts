@@ -3,7 +3,7 @@ import cors from "cors";
 import MongoStore from "connect-mongo";
 import mongoose from "mongoose";
 import session from "express-session";
-import bodyParser from 'body-parser';
+import bodyParser from "body-parser";
 import passport from "passport";
 import cookieParser from "cookie-parser";
 
@@ -12,7 +12,6 @@ import fileRouter from './routes/file';
 import interpretrRouter from './routes/interpreter';
 import folderRouter from "./routes/folder";
 import gameRouter from "./routes/game";
-
 
 const app = express();
 require("dotenv").config();
@@ -26,6 +25,7 @@ app.use(
 app.use(bodyParser.json({ limit: "10mb" }))
 app.use(bodyParser.urlencoded({ limit: "10mb", extended: true, parameterLimit: 50000 }));
 app.use(express.json());
+
 app.use(
   session({
     secret: [`${process.env.SECRET_KEY}`],
@@ -33,7 +33,7 @@ app.use(
     saveUninitialized: true,
     store: MongoStore.create({ mongoUrl: process.env.MONGODB_URI }),
     cookie: {
-      sameSite: 'none',
+      sameSite: "none",
       secure: true,
       maxAge: 1000 * 60 * 60 * 24 * 7,
     },
@@ -51,9 +51,9 @@ app.use('/', gameRouter);
 
 app.set("trust proxy", 1);
 
-
 app.listen(process.env.PORT, () => {
   console.log(`Listening on port ${process.env.PORT}!`);
+  console.log("start");
 });
 
 mongoose.set("strictQuery", false);

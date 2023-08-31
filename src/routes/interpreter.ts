@@ -1,6 +1,6 @@
-import express from 'express';
+import express from "express";
 
-import * as interpreterController from '../controller/interpretr.controller';
+import * as interpreterController from "../controller/interpretr.controller";
 
 const router = express.Router();
 

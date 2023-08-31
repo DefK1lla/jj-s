@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import bcrypt from 'bcryptjs';
+import bcrypt from "bcryptjs";
 
 import { saveUser, ResetPassword, saveAdmin, ResetPasswordAdmin } from "../service/user.service";
 import passport from '../passport/index';
@@ -19,7 +19,6 @@ export const registration = (req: Request, res: Response, next: NextFunction) =>
     })      
 }
 
-
 export const logOut = (req: Request, res: Response, next: NextFunction) => {
     req.logout( { keepSessionInfo: false },(err) => {
         console.log(err)
@@ -32,9 +31,9 @@ export const logOut = (req: Request, res: Response, next: NextFunction) => {
     
 }
 
-export const passportAuthenticate = passport.authenticate( 'local', {
-    successMessage: true,
-    failureMessage: true
+export const passportAuthenticate = passport.authenticate("local", {
+  successMessage: true,
+  failureMessage: true,
 });
 
 export const passportRegistration = passport.authenticate( "local-signup", {

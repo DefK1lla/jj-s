@@ -20,8 +20,8 @@ export async function authentication(name: string) {
     const user = await User.findOne({ name: name });
     
     if (user === null) { return null }
-
-    return { id: user.id, username: user.name, password: user.password };
+  
+  return { id: user.id, username: user.name, password: user.password };
 }
 
 export async function authenticationById(id: string) {
