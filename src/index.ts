@@ -31,10 +31,10 @@ app.use(
     secret: [`${process.env.SECRET_KEY}`],
     resave: true,
     saveUninitialized: true,
-    store: MongoStore.create({ mongoUrl: `${"mongodb://localhost:27017/test"/*process.env.MONGODB_URI*/}` }),
+    store: MongoStore.create({ mongoUrl: process.env.MONGODB_URI }),
     cookie: {
       sameSite: 'none',
-      secure: false, // change
+      secure: true,
       maxAge: 1000 * 60 * 60 * 24 * 7,
     },
   })
@@ -57,6 +57,6 @@ app.listen(process.env.PORT, () => {
 });
 
 mongoose.set("strictQuery", false);
-mongoose.connect(`${"mongodb://localhost:27017/test"/*process.env.MONGODB_URI*/}`, () =>
+mongoose.connect(`${process.env.MONGODB_URI}`, () =>
   console.log("connected to mongodb")
 );

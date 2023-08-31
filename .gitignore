@@ -38,3 +38,7 @@ next-env.d.ts
 # IDE
 .vscode/*
 .idea/*
+
+# others
+/src/files
+/src/imgs
