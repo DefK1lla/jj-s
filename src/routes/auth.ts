@@ -14,4 +14,13 @@ router.get('/user', authController.getUserData);
 
 router.post('/password', authController.setNewPassword)
 
+router.post(`/admin/login`, authController.passportAuthenticate, authController.getAdminUserData);
+
+router.post('/admin/signup',authController.passportRegistration, authController.getAdminUserData)
+
+router.get('/admin/user', authController.getAdminUserData);
+
+router.post('/admin/password', authController.setAdminNewPassword)
+
+
 export default router;
