@@ -7,9 +7,9 @@ import bodyParser from "body-parser";
 import passport from "passport";
 import cookieParser from "cookie-parser";
 
-import authRouter from './routes/auth';
-import fileRouter from './routes/file';
-import interpretrRouter from './routes/interpreter';
+import authRouter from "./routes/auth";
+import fileRouter from "./routes/file";
+import interpretrRouter from "./routes/interpreter";
 import folderRouter from "./routes/folder";
 import gameRouter from "./routes/game";
 
@@ -18,12 +18,18 @@ require("dotenv").config();
 
 app.use(
   cors({
-    origin: ["http://localhost:3000"],
+    origin: ["http://localhost:3000", "https://jj-c.vercel.app/"],
     credentials: true,
   })
 );
-app.use(bodyParser.json({ limit: "10mb" }))
-app.use(bodyParser.urlencoded({ limit: "10mb", extended: true, parameterLimit: 50000 }));
+app.use(bodyParser.json({ limit: "10mb" }));
+app.use(
+  bodyParser.urlencoded({
+    limit: "10mb",
+    extended: true,
+    parameterLimit: 50000,
+  })
+);
 app.use(express.json());
 
 app.use(
@@ -43,11 +49,11 @@ app.use(cookieParser());
 app.use(passport.initialize());
 app.use(passport.session());
 
-app.use('/', authRouter);
-app.use('/', fileRouter);
-app.use('/', interpretrRouter);
-app.use('/', folderRouter);
-app.use('/', gameRouter);
+app.use("/", authRouter);
+app.use("/", fileRouter);
+app.use("/", interpretrRouter);
+app.use("/", folderRouter);
+app.use("/", gameRouter);
 
 app.set("trust proxy", 1);
 

@@ -19,11 +19,15 @@ var game_1 = __importDefault(require("./routes/game"));
 var app = (0, express_1.default)();
 require("dotenv").config();
 app.use((0, cors_1.default)({
-    origin: ["http://localhost:3000"],
+    origin: ["http://localhost:3000", "https://jj-c.vercel.app/"],
     credentials: true,
 }));
 app.use(body_parser_1.default.json({ limit: "10mb" }));
-app.use(body_parser_1.default.urlencoded({ limit: "10mb", extended: true, parameterLimit: 50000 }));
+app.use(body_parser_1.default.urlencoded({
+    limit: "10mb",
+    extended: true,
+    parameterLimit: 50000,
+}));
 app.use(express_1.default.json());
 app.use((0, express_session_1.default)({
     secret: ["".concat(process.env.SECRET_KEY)],
@@ -39,11 +43,11 @@ app.use((0, express_session_1.default)({
 app.use((0, cookie_parser_1.default)());
 app.use(passport_1.default.initialize());
 app.use(passport_1.default.session());
-app.use('/', auth_1.default);
-app.use('/', file_1.default);
-app.use('/', interpreter_1.default);
-app.use('/', folder_1.default);
-app.use('/', game_1.default);
+app.use("/", auth_1.default);
+app.use("/", file_1.default);
+app.use("/", interpreter_1.default);
+app.use("/", folder_1.default);
+app.use("/", game_1.default);
 app.set("trust proxy", 1);
 app.listen(process.env.PORT, function () {
     console.log("Listening on port ".concat(process.env.PORT, "!"));
