@@ -16,7 +16,7 @@ exports.setAdminNewPassword = exports.getAdminUserData = exports.passportAdminRe
 const bcryptjs_1 = __importDefault(require("bcryptjs"));
 const user_service_1 = require("../service/user.service");
 const index_1 = __importDefault(require("../passport/index"));
-const user_model_1 = require("../../src/model/user.model");
+const user_model_1 = require("../model/user.model");
 const registration = (req, res, next) => {
     const salt = +process.env.SALT;
     bcryptjs_1.default.hash(req.body.password, salt, (err, hash) => __awaiter(void 0, void 0, void 0, function* () {
@@ -48,7 +48,7 @@ exports.passportAuthenticate = index_1.default.authenticate("local", {
 });
 exports.passportRegistration = index_1.default.authenticate("local-signup", {
     successMessage: true,
-    failureMessage: true
+    failureMessage: true,
 });
 const getUserData = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
@@ -107,13 +107,13 @@ const adminRegistration = (req, res, next) => {
     }));
 };
 exports.adminRegistration = adminRegistration;
-exports.passportAdminAuthenticate = index_1.default.authenticate('local-admin', {
+exports.passportAdminAuthenticate = index_1.default.authenticate("local-admin", {
     successMessage: true,
-    failureMessage: true
+    failureMessage: true,
 });
 exports.passportAdminRegistration = index_1.default.authenticate("local-signup-admin", {
     successMessage: true,
-    failureMessage: true
+    failureMessage: true,
 });
 const getAdminUserData = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
