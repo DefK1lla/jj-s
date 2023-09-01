@@ -8,9 +8,15 @@
     "dev": "nodemon src/index.ts",
     "prebuild": "npm i",
     "build": "rimraf dist && tsc",
+    "ts.check": "tsc --project tsconfig.json",
     "add-build": "git add dist",
     "format": "prettier --write ./src/**/*.*"
   },
+  "pre-commit": [
+    "ts.check",
+    "build",
+    "add-build"
+  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Junior-gate/jack-json-server.git"
