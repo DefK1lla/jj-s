@@ -8,70 +8,35 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-var __generator = (this && this.__generator) || function (thisArg, body) {
-    var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t, g;
-    return g = { next: verb(0), "throw": verb(1), "return": verb(2) }, typeof Symbol === "function" && (g[Symbol.iterator] = function() { return this; }), g;
-    function verb(n) { return function (v) { return step([n, v]); }; }
-    function step(op) {
-        if (f) throw new TypeError("Generator is already executing.");
-        while (g && (g = 0, op[0] && (_ = 0)), _) try {
-            if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
-            if (y = 0, t) op = [op[0] & 2, t.value];
-            switch (op[0]) {
-                case 0: case 1: t = op; break;
-                case 4: _.label++; return { value: op[1], done: false };
-                case 5: _.label++; y = op[1]; op = [0]; continue;
-                case 7: op = _.ops.pop(); _.trys.pop(); continue;
-                default:
-                    if (!(t = _.trys, t = t.length > 0 && t[t.length - 1]) && (op[0] === 6 || op[0] === 2)) { _ = 0; continue; }
-                    if (op[0] === 3 && (!t || (op[1] > t[0] && op[1] < t[3]))) { _.label = op[1]; break; }
-                    if (op[0] === 6 && _.label < t[1]) { _.label = t[1]; t = op; break; }
-                    if (t && _.label < t[2]) { _.label = t[2]; _.ops.push(op); break; }
-                    if (t[2]) _.ops.pop();
-                    _.trys.pop(); continue;
-            }
-            op = body.call(thisArg, _);
-        } catch (e) { op = [6, e]; y = 0; } finally { f = t = 0; }
-        if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
-    }
-};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var passport_1 = __importDefault(require("passport"));
-var passport_local_1 = require("passport-local");
-var bcryptjs_1 = __importDefault(require("bcryptjs"));
-var user_service_1 = require("../service/user.service");
-var user_service_2 = require("../service/user.service");
-var user_model_1 = require("../../src/model/user.model");
+const passport_1 = __importDefault(require("passport"));
+const passport_local_1 = require("passport-local");
+const bcryptjs_1 = __importDefault(require("bcryptjs"));
+const user_service_1 = require("../service/user.service");
+const user_service_2 = require("../service/user.service");
+const user_model_1 = require("../../src/model/user.model");
 passport_1.default.use("local", new passport_local_1.Strategy({
     usernameField: "username",
     passwordField: "password",
     session: true
 }, function verify(name, password, cb) {
-    return __awaiter(this, void 0, void 0, function () {
-        var userLogin;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0: return [4 /*yield*/, (0, user_service_1.authentication)(name)];
-                case 1:
-                    userLogin = _a.sent();
-                    if (userLogin === null) {
-                        return [2 /*return*/, cb(null, false, { message: 'Incorrect username' })];
-                    }
-                    bcryptjs_1.default.compare(password, userLogin.password, function (err, result) {
-                        if (err) {
-                            return cb(err);
-                        }
-                        if (!result) {
-                            return cb(null, false, { message: 'Incorrect password.' });
-                        }
-                        else {
-                            return cb(null, userLogin, { message: "Correct username and password" });
-                        }
-                    });
-                    return [2 /*return*/];
+    return __awaiter(this, void 0, void 0, function* () {
+        const userLogin = yield (0, user_service_1.authentication)(name);
+        if (userLogin === null) {
+            return cb(null, false, { message: 'Incorrect username' });
+        }
+        bcryptjs_1.default.compare(password, userLogin.password, (err, result) => {
+            if (err) {
+                return cb(err);
+            }
+            if (!result) {
+                return cb(null, false, { message: 'Incorrect password.' });
+            }
+            else {
+                return cb(null, userLogin, { message: "Correct username and password" });
             }
         });
     });
@@ -81,42 +46,23 @@ passport_1.default.use('local-signup', new passport_local_1.Strategy({
     passwordField: "password",
     passReqToCallback: true
 }, function verify(req, username, password, done) {
-    return __awaiter(this, void 0, void 0, function () {
-        var salt, user;
-        var _this = this;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0:
-                    salt = +process.env.SALT;
-                    return [4 /*yield*/, user_model_1.User.findOne({ name: username })];
-                case 1:
-                    user = _a.sent();
-                    if (user) {
-                        return [2 /*return*/, done("That login is already taken.", false, { message: 'That login is already taken.' })];
-                    }
-                    else {
-                        bcryptjs_1.default.hash(password, salt, function (err, hash) { return __awaiter(_this, void 0, void 0, function () {
-                            var result, e_1;
-                            return __generator(this, function (_a) {
-                                switch (_a.label) {
-                                    case 0:
-                                        _a.trys.push([0, 2, , 3]);
-                                        return [4 /*yield*/, (0, user_service_2.saveUser)(req.body.username, hash)];
-                                    case 1:
-                                        result = _a.sent();
-                                        done(null, result, { message: "Correct username and password" });
-                                        return [3 /*break*/, 3];
-                                    case 2:
-                                        e_1 = _a.sent();
-                                        return [2 /*return*/, done(e_1)];
-                                    case 3: return [2 /*return*/];
-                                }
-                            });
-                        }); });
-                    }
-                    return [2 /*return*/];
-            }
-        });
+    return __awaiter(this, void 0, void 0, function* () {
+        const salt = +process.env.SALT;
+        const user = yield user_model_1.User.findOne({ name: username });
+        if (user) {
+            return done("That login is already taken.", false, { message: 'That login is already taken.' });
+        }
+        else {
+            bcryptjs_1.default.hash(password, salt, (err, hash) => __awaiter(this, void 0, void 0, function* () {
+                try {
+                    const result = yield (0, user_service_2.saveUser)(req.body.username, hash);
+                    done(null, result, { message: "Correct username and password" });
+                }
+                catch (e) {
+                    return done(e);
+                }
+            }));
+        }
     });
 }));
 passport_1.default.use("local-admin", new passport_local_1.Strategy({
@@ -124,29 +70,21 @@ passport_1.default.use("local-admin", new passport_local_1.Strategy({
     passwordField: "password",
     session: true
 }, function verify(name, password, cb) {
-    return __awaiter(this, void 0, void 0, function () {
-        var userLogin;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0: return [4 /*yield*/, (0, user_service_1.adminAuthentication)(name)];
-                case 1:
-                    userLogin = _a.sent();
-                    if (userLogin === null) {
-                        return [2 /*return*/, cb(null, false, { message: 'Incorrect username' })];
-                    }
-                    bcryptjs_1.default.compare(password, userLogin.password, function (err, result) {
-                        if (err) {
-                            return cb(err);
-                        }
-                        if (!result) {
-                            return cb(null, false, { message: 'Incorrect password.' });
-                        }
-                        else {
-                            userLogin.admin = true;
-                            return cb(null, userLogin, { message: "Correct username and password" });
-                        }
-                    });
-                    return [2 /*return*/];
+    return __awaiter(this, void 0, void 0, function* () {
+        const userLogin = yield (0, user_service_1.adminAuthentication)(name);
+        if (userLogin === null) {
+            return cb(null, false, { message: 'Incorrect username' });
+        }
+        bcryptjs_1.default.compare(password, userLogin.password, (err, result) => {
+            if (err) {
+                return cb(err);
+            }
+            if (!result) {
+                return cb(null, false, { message: 'Incorrect password.' });
+            }
+            else {
+                userLogin.admin = true;
+                return cb(null, userLogin, { message: "Correct username and password" });
             }
         });
     });
@@ -156,59 +94,33 @@ passport_1.default.use('local-signup-admin', new passport_local_1.Strategy({
     passwordField: "password",
     passReqToCallback: true
 }, function verify(req, username, password, done) {
-    return __awaiter(this, void 0, void 0, function () {
-        var salt, user;
-        var _this = this;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0:
-                    salt = +process.env.SALT;
-                    return [4 /*yield*/, user_model_1.Admin.findOne()];
-                case 1:
-                    user = _a.sent();
-                    if (user) {
-                        return [2 /*return*/, done("TThe administrator is already there. It is forbidden to create another admin", false, { message: 'The administrator is already there. It is forbidden to create another admin' })];
-                    }
-                    else {
-                        bcryptjs_1.default.hash(password, salt, function (err, hash) { return __awaiter(_this, void 0, void 0, function () {
-                            var result, e_2;
-                            return __generator(this, function (_a) {
-                                switch (_a.label) {
-                                    case 0:
-                                        _a.trys.push([0, 2, , 3]);
-                                        return [4 /*yield*/, (0, user_service_1.saveAdmin)(req.body.username, hash)];
-                                    case 1:
-                                        result = _a.sent();
-                                        result.admin = true;
-                                        done(null, result, { message: "Correct username and password" });
-                                        return [3 /*break*/, 3];
-                                    case 2:
-                                        e_2 = _a.sent();
-                                        return [2 /*return*/, done(e_2)];
-                                    case 3: return [2 /*return*/];
-                                }
-                            });
-                        }); });
-                    }
-                    return [2 /*return*/];
-            }
-        });
-    });
-}));
-passport_1.default.serializeUser(function (user, cb) {
-    return cb(null, { id: user.id, admin: user === null || user === void 0 ? void 0 : user.admin });
-});
-passport_1.default.deserializeUser(function (data, cb) { return __awaiter(void 0, void 0, void 0, function () {
-    var user;
-    return __generator(this, function (_a) {
-        switch (_a.label) {
-            case 0: return [4 /*yield*/, (0, user_service_1.authenticationById)(data.id)];
-            case 1:
-                user = _a.sent();
-                user.admin = data.admin;
-                return [2 /*return*/, cb(null, user)];
+    return __awaiter(this, void 0, void 0, function* () {
+        const salt = +process.env.SALT;
+        const user = yield user_model_1.Admin.findOne();
+        if (user) {
+            return done("TThe administrator is already there. It is forbidden to create another admin", false, { message: 'The administrator is already there. It is forbidden to create another admin' });
+        }
+        else {
+            bcryptjs_1.default.hash(password, salt, (err, hash) => __awaiter(this, void 0, void 0, function* () {
+                try {
+                    const result = yield (0, user_service_1.saveAdmin)(req.body.username, hash);
+                    result.admin = true;
+                    done(null, result, { message: "Correct username and password" });
+                }
+                catch (e) {
+                    return done(e);
+                }
+            }));
         }
     });
-}); });
+}));
+passport_1.default.serializeUser((user, cb) => {
+    return cb(null, { id: user.id, admin: user === null || user === void 0 ? void 0 : user.admin });
+});
+passport_1.default.deserializeUser((data, cb) => __awaiter(void 0, void 0, void 0, function* () {
+    const user = yield (0, user_service_1.authenticationById)(data.id);
+    user.admin = data.admin;
+    return cb(null, user);
+}));
 exports.default = passport_1.default;
 //# sourceMappingURL=index.js.map

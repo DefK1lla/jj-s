@@ -4,8 +4,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Game = void 0;
-var mongoose_1 = __importDefault(require("mongoose"));
-var game = new mongoose_1.default.Schema({
+const mongoose_1 = __importDefault(require("mongoose"));
+const game = new mongoose_1.default.Schema({
     author_id: { type: String, required: true },
     name: { type: String, required: true },
 });

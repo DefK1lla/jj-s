@@ -4,8 +4,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Folder = void 0;
-var mongoose_1 = __importDefault(require("mongoose"));
-var folderJson = new mongoose_1.default.Schema({
+const mongoose_1 = __importDefault(require("mongoose"));
+const folderJson = new mongoose_1.default.Schema({
     game_id: { type: String, required: true },
     name: { type: String, required: true },
 });

@@ -26,9 +26,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var express_1 = __importDefault(require("express"));
-var folderController = __importStar(require("../controller/folder.controller"));
-var router = express_1.default.Router();
+const express_1 = __importDefault(require("express"));
+const folderController = __importStar(require("../controller/folder.controller"));
+const router = express_1.default.Router();
 router.post("/folder/all", folderController.findFolderData);
 router.post("/folder/id", folderController.findFolderDataById);
 router.post("/folder/set", folderController.createFolderData);
