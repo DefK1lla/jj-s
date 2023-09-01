@@ -33,7 +33,7 @@ app.use((0, express_session_1.default)({
     secret: ["".concat(process.env.SECRET_KEY)],
     resave: true,
     saveUninitialized: true,
-    store: connect_mongo_1.default.create({ mongoUrl: process.env.MONGODB_URI }),
+    store: connect_mongo_1.default.create({ mongoUrl: process.env.MONGO_DB_URI }),
     cookie: {
         sameSite: "none",
         secure: true,
